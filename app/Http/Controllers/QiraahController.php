@@ -35,7 +35,7 @@ class QiraahController extends Controller
                 ];
               }
         });
-        return view("page.qiraah.index", compact("qiraah"));
+        return view("page.mufrodat.index", compact("qiraah"));
     }
 
     public function kontenQiraah($nama_qiraah) {
