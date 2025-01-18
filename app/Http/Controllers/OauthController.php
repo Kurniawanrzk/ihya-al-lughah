@@ -44,7 +44,7 @@ class OauthController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-            return redirect()->route("login_index")->withErrors(['msg' => 'Authentication failed, please try again.']);
+            return redirect()->back();
         }
     }
 

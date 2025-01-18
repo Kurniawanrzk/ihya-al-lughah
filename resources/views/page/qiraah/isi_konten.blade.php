@@ -1,19 +1,20 @@
 @extends("layout.layout")
 
 @section("css")
-<style>
-.text-sm.text-gray-700 {
-    display: none;
-}
+<script src="https://cdn.tailwindcss.com"></script>
 
-</style>
 @endsection
-@section("title", "Halaman ")
+@section("title", "Halaman Belajar Qiraah")
 @section('content')
-<livewire:qiraah-konten-isi :konten_qiraah="$konten_qiraah" />
+<livewire:isi-maharah-qiraah
+    :qiraah="$qiraah"
+    :isi_qiraah="$qiraahisi"
+/>
 @endsection
 
 @section("javascript")
+
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=dTNFfN3Z"></script>
 <script src="{{asset("js/sound.js")}}"></script>
+
 @endsection

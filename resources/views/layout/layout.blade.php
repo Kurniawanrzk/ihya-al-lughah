@@ -4,80 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'My Laravel App')</title>
-    
+    <title>@yield('title', 'Arabic Learning')</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{asset("css/bootstrap.min.css")}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @yield("css")
     @livewireStyles
+
+    <style>
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body style="background-color:#ECF0F3">
-    <header class="p-3 mb-3 border-bottom bg-primary">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center gap-3 justify-content-center justify-content-lg-start">
-            <a href="{{ Route("index") }}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-              <img src="{{asset("img/logo.svg")}}" width="80" alt="">
-            </a>
-    
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="{{ Route("index") }}" class="nav-link px-2 link-{{Route::currentRouteName() == "index" ? "light" : "dark"}}">Beranda</a></li>
-              <li><a href="{{ Route("list_qiraah_index") }}" class="nav-link px-2 link-{{Route::currentRouteName() == "list_qiraah_index" || Route::currentRouteName() == "qiraah_index" || Route::currentRouteName() == "konten_qiraah_index" ? "light" : "dark"}}">Qiraah</a></li>
-              <li><a href="#" class="nav-link px-2 link-dark">Kalam</a></li>
-              <li><a href="#" class="nav-link px-2 link-dark">Latihan</a></li>
-              <li><a href="#" class="nav-link px-2 link-dark">Game</a></li>
-            </ul>
-    
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-            </form>
-    
-            <div>
-            <div class="dropdown text-end">
-              <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://static.thenounproject.com/png/354384-200.png" alt="mdo" width="32" height="32" class="rounded-circle bg-light">
-              </a>
-              <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                @if(auth()->user() == null)
-                <li><a class="dropdown-item" href="{{ route('oauth.google') }}">Login Dengan Google</a></li>
-                @else 
-                <li><a class="dropdown-item" href="{{ route("logout") }}">Sign out</a></li>
-                @endif
-              </ul>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Modern Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between p-4">
+                {{-- <!-- Logo -->
+                <a href="{{ Route('index') }}" class="flex items-center space-x-2">
+                    <img src="{{asset('img/logo.svg')}}" width="60" alt="Logo" class="hover:opacity-80 transition-opacity">
+                </a> --}}
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="{{ Route('index') }}" 
+                       class="nav-link px-3 py-2 rounded-lg {{ Route::currentRouteName() == 'index' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
+                        Beranda
+                    </a>
+                    <a href="{{ Route('list_qiraah_index') }}" 
+                       class="nav-link px-3 py-2 rounded-lg {{ in_array(Route::currentRouteName(), ['list_qiraah_index', 'qiraah_index', 'konten_qiraah_index']) ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
+                        Qiraah
+                    </a>
+                    <a href="{{ Route("list_kalam_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Kalam</a>
+                    <a href="{{ Route("list_mufrodat_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Mufrodat</a>
+
+                    <a href="{{ Route("list_latihan_qiraah_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Latihan Qiraah</a>
+                    <a href="#" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Game</a>
+                </nav>
+
+                <!-- Right Section -->
+                <div class="flex items-center space-x-4">
+                    <!-- Search -->
+                    <div class="hidden md:block">
+                        <input type="search" 
+                               class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
+                               placeholder="Search...">
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <div class="dropdown">
+                            <button class="flex items-center space-x-2 focus:outline-none" id="dropdownUser1" data-bs-toggle="dropdown">
+                                <img src="https://static.thenounproject.com/png/354384-200.png" 
+                                     alt="Profile" 
+                                     class="w-10 h-10 rounded-full border-2 border-gray-200 hover:border-blue-400 transition-colors">
+                            </button>
+                            <ul class="dropdown-menu shadow-lg rounded-lg mt-2" aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="#">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                @if(auth()->user() == null)
+                                    <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="{{ route('oauth.google') }}">Login Dengan Google</a></li>
+                                @else 
+                                    <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="{{ route('logout') }}">Sign out</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-          
-            </div>
-          </div>
         </div>
-      </header>
-    
+    </header>
+
+    <!-- Alert Messages -->
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+        <div class="max-w-4xl mx-auto mt-4 px-4">
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
+        <div class="max-w-4xl mx-auto mt-4 px-4">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
         </div>
     @endif
 
-    <main>
-        <div class="container-fluid">
-            @yield('content')
-        </div>
+    <!-- Main Content -->
+    <main class="container mx-auto py-6">
+        @yield('content')
     </main>
 
-    <footer>
-        {{-- <p>&copy; {{ date('Y') }} My Laravel App. All rights reserved.</p> --}}
-    </footer>
-
-    <script src="{{asset("js/bootstrap.bundle.min.js")}}"></script>
+    <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     @yield("javascript")
     @livewireScripts
     @include('sweetalert::alert')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </body>
+</body>
 </html>
