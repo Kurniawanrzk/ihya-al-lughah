@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TASHKEEL = exports.BANNED_WORDS = exports.STANDARD_LETTERS = exports.PRONOUNCED_LETTERS = exports.ARABIC_SUFFIXES = exports.ARABIC_PREFIXES = exports.ARABIC_DOTLESS_DICT = void 0;
+var arabic_letters_1 = require("./arabic-letters");
+Object.defineProperty(exports, "ARABIC_DOTLESS_DICT", { enumerable: true, get: function () { return arabic_letters_1.ARABIC_DOTLESS_DICT; } });
+Object.defineProperty(exports, "ARABIC_PREFIXES", { enumerable: true, get: function () { return arabic_letters_1.ARABIC_PREFIXES; } });
+Object.defineProperty(exports, "ARABIC_SUFFIXES", { enumerable: true, get: function () { return arabic_letters_1.ARABIC_SUFFIXES; } });
+Object.defineProperty(exports, "PRONOUNCED_LETTERS", { enumerable: true, get: function () { return arabic_letters_1.PRONOUNCED_LETTERS; } });
+Object.defineProperty(exports, "STANDARD_LETTERS", { enumerable: true, get: function () { return arabic_letters_1.STANDARD_LETTERS; } });
+var banned_words_1 = require("./banned-words");
+Object.defineProperty(exports, "BANNED_WORDS", { enumerable: true, get: function () { return banned_words_1.BANNED_WORDS; } });
+var tashkeel_1 = require("./tashkeel");
+Object.defineProperty(exports, "TASHKEEL", { enumerable: true, get: function () { return tashkeel_1.TASHKEEL; } });

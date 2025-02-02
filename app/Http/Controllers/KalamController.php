@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\{Kalam, KalamIsi};
 
 class KalamController extends Controller
 {
-    public function index() 
+    public function index()
     {
         $kalam =  Kalam::all();
         return view("page.kalam.index", compact("kalam"));
@@ -21,4 +20,4 @@ class KalamController extends Controller
         return view("page.kalam.isi_konten", compact("kalamisi", 'kalam'));
     }
 }
- 
+

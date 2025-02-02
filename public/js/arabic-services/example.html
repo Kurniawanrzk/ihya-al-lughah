@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="icon"
+			type="image/svg"
+			href="https://seen-arabic.github.io/Arabic-Services/assets/images/logo-circle.svg"
+		/>
+	</head>
+	<body>
+		<!-- run npm run bundle to get arabic-services.umd.js file -->
+		<script src="./dist/umd/arabic-services.umd.js"></script>
+		<script>
+			console.log('ArabicServices:', ArabicServices);
+			console.log('-------- Functions --------');
+			console.log('removeTashkeel:', ArabicServices.removeTashkeel('الخَيْلُ وَاللّيْلُ وَالبَيْداءُ تَعرِفُني'));
+			console.log('removeTatweel:', ArabicServices.removeTatweel('رائـــــــع'));
+			console.log(
+				'toOldArabic:',
+				ArabicServices.toOldArabic(
+					`الخَيْـلُ وَاللّيْـلُ وَالبَيْـداءُ تَعرِفُني وَالسّيفُ وَالرّمحُ والقرْطاسُ وَالقَلَـمُ`,
+				),
+			);
+			console.log(
+				'toOldArabicAndTashfeerBannedWords:',
+				ArabicServices.toOldArabicAndTashfeerBannedWords('جيش العدو يقتل الأطفال'),
+			);
+			console.log('Tashfeer:', ArabicServices.tashfeer('هذا النص مشفر'));
+			console.log('tashfeerBannedWords:', ArabicServices.tashfeerBannedWords('جيش العدو يقتل الأطفال'));
+			console.log('wordToLetters:', ArabicServices.wordToLetters('شجرة'));
+			console.log('removeArabicAffixes:', ArabicServices.removeArabicAffixes('موظفين'));
+
+			console.log('-------- Constants --------');
+			console.log('ARABIC_DOTLESS_DICT:', ArabicServices.constants.ARABIC_DOTLESS_DICT);
+			console.log('STANDARD_LETTERS:', ArabicServices.constants.STANDARD_LETTERS);
+			console.log('TASHKEEL:', ArabicServices.constants.TASHKEEL);
+			console.log('PRONOUNCED_LETTERS:', ArabicServices.constants.PRONOUNCED_LETTERS);
+			console.log('ARABIC_PREFIXES:', ArabicServices.constants.ARABIC_PREFIXES);
+			console.log('ARABIC_SUFFIXES:', ArabicServices.constants.ARABIC_SUFFIXES);
+			console.log('BANNED_WORDS:', ArabicServices.constants.BANNED_WORDS);
+		</script>
+	</body>
+</html>

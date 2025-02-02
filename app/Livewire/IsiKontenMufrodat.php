@@ -37,3 +37,4 @@ class IsiKontenMufrodat extends Component
         ]);
     }
 }
+
