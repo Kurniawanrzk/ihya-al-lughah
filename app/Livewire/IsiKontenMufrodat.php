@@ -14,6 +14,10 @@ class IsiKontenMufrodat extends Component
     {
         $this->kontenMufrodat = $konten_mufrodat;
     }
+    public function playSound($url)
+    {
+        $this->dispatch('play-audio', $url);
+    }
 
     public function nextCard()
     {

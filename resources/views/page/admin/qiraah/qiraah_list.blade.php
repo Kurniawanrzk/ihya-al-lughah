@@ -236,8 +236,8 @@ function submitDeleteForm(id) {
         tbody.insertBefore(newRow, idAddRow.closest("tr"));
     }
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.9/tinymce.min.js" integrity="sha512-zdq7KjR1iJyOM1MnKscySK8KUHbPIl63/GPT/pyfzf5WHP4f+hH937oZfbVrdOLwFLasQt4iK0p4M3iOCWzBxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.9/tinymce.min.js" integrity="sha512-zdq7KjR1iJyOM1MnKscySK8KUHbPIl63/GPT/pyfzf5WHP4f+hH937oZfbVrdOLwFLasQt4iK0p4M3iOCWzBxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
     tinymce.init({
         selector: '.tinymce-editor',
         height: 400,

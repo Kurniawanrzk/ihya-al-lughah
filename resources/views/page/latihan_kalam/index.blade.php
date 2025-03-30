@@ -13,10 +13,7 @@
                     <div class="text-3xl font-bold">{{ count($latihan) }}</div>
                     <div class="text-blue-100">Total Bab</div>
                 </div>
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-3xl font-bold">500+</div>
-                    <div class="text-blue-100">Mufradat</div>
-                </div>
+            
             </div>
         </div>
     </div>
@@ -115,7 +112,7 @@
                     </div>
 
                     <a
-                        href="{{ Route('isi_konten_latihan_qiraah', $m['urutan_bab']) }}"
+                        href="{{ Route('isi_konten_latihan_kalam', $m['urutan_bab']) }}"
                         class="block w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-center rounded-lg transition-colors duration-200"
                     >
                         Mulai Belajar

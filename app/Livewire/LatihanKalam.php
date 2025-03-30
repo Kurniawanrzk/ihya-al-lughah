@@ -2,28 +2,76 @@
 namespace App\Livewire;
 
 use App\Models\PertanyaanSoalCerita;
-use App\Models\SoalCerita;
+use App\Models\{SoalCerita, SoalPercakapan, AudioRecording, RekamanAudioSoalCerita, RekamanAudioSoalPercakapan};
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 
 class LatihanKalam extends Component
 {
     public $latihanKalam;
     public $currentPage = 1;
     public $answers = [];
+    public $jawaban_cerita = [];
     public $answerStatus = [];
     public $isListening = false;
     public $currentQuestionId = null;
+    public $activeTab = 'cerita'; // 'cerita' or 'percakapan'
+
+    public $audioRecordingsCerita = [];
+    public $audioRecordingsPercakapan = [];
+
+    #[\Livewire\Attributes\On('saveAudioTemp')]
+    public function saveAudioTemp($data)
+    {
+        if ($data['type'] === 'cerita') {
+            $this->audioRecordingsCerita[$data['soalCeritaId']] = $data['audioUrl'];
+        } else {
+            $this->audioRecordingsPercakapan[$data['soalCeritaId']] = $data['audioUrl'];
+        }
+    }
 
     public function mount($latihan)
     {
         $this->latihanKalam = $latihan;
+        foreach(SoalCerita::where("id_latihan_kalam", $this->latihanKalam->id)->get() as $cerita){
+            $this->jawaban_cerita[$cerita->id] = null;
+        }
+
+        // Retrieve previously saved audio recordings from the database
+        $this->retrieveAudioRecordings();
+
+        for($i = 0; $i < SoalCerita::where("id_latihan_kalam", $this->latihanKalam->id)->count(); $i++) {
+            $jawaban_cerita[$i] = 1;
+        }
     }
 
-    public function startListening($questionId)
+    private function retrieveAudioRecordings()
+    {
+        // Retrieve audio recordings for Soal Cerita
+        $ceritaRecordings = RekamanAudioSoalCerita::where('id_user', auth()->id())
+            ->get();
+
+        foreach ($ceritaRecordings as $recording) {
+            $this->audioRecordingsCerita[$recording->id_soal_cerita] =  Storage::url('rekaman_audio/' . $recording->lokasi_audio);
+        }
+
+        // Retrieve audio recordings for Soal Percakapan
+        $percakapanRecordings = RekamanAudioSoalPercakapan::where('id_user', auth()->id())
+            ->get();
+
+        foreach ($percakapanRecordings as $recording) {
+            $this->audioRecordingsPercakapan[$recording->id_soal_percakapan] = Storage::url('rekaman_audio/' . $recording->lokasi_audio);
+        }
+    }
+
+    public function startListening($questionId, $soalCeritaId)
     {
         $this->currentQuestionId = $questionId;
         $this->isListening = true;
-        $this->dispatch('startRecognition', questionId: $questionId);
+        $this->dispatch('startRecognition', [
+            'questionId' => $questionId,
+            'soalCeritaId' => $soalCeritaId
+        ]);
     }
 
     public function stopListening()
@@ -36,18 +84,10 @@ class LatihanKalam extends Component
     #[\Livewire\Attributes\On('update-answer')]
     public function updateAnswer($questionId, $jawaban)
     {
-        $result = $this->AIHandler($questionId, $jawaban);
+      
 
-        // Simpan status jawaban (benar atau salah)
-        if ($result == "1\n") {
-            $this->answerStatus[$questionId] = true; // Jawaban benar
-            $this->dispatch("putar-suara", benar:1);
-        } else {
-            $this->answerStatus[$questionId] = false; // Jawaban salah
-            $this->dispatch("putar-suara", benar:0);
-        }
+        $this->jawaban_cerita[$questionId] = $jawaban;
 
-        // Stop listening after getting the answer
         $this->stopListening();
     }
 
@@ -65,52 +105,6 @@ class LatihanKalam extends Component
         $this->currentQuestionId = null;
         // You could add error handling logic here if needed
     }
-
-    public function AIHandler($questionId, $jawaban) {
-        $BASE_URL_GEMINI="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
-        $API_KEY_GEMINI="AIzaSyAfSq_2UzoRuu-oSbJuTDrzvyTeVf36yc0";
-        $apiUrl = $BASE_URL_GEMINI.$API_KEY_GEMINI; 
-        $pertanyaan = PertanyaanSoalCerita::where("id", $questionId)->first();
-        // AI request body
-        $requestBody = [
-            "system_instruction" => [
-                "parts" => [
-                    "text" => "Kamu adalah AI yang bertugas untuk menjawab 1 / 0, cek jika user input sesuai dengan jawaban sesuai dengan yang benar. HANYA BERIKAN RESPON 1 atau 0, JANGAN YANG LAIN, JIKA JAWABAN MIRIP TAPI TIDAK TERLALU SEMPURNA PENULISAN NYA BENAR KAN, contoh ."
-                ]
-            ],
-            "contents" => [
-                [
-                    "parts" => [
-                        ["text" => "question:" . $pertanyaan->pertanyaan . " user_input:" . $jawaban . " jawaban:" . $pertanyaan->jawaban_benar]
-                    ]
-                ]
-            ]
-        ];
-    
-        $ch = curl_init($apiUrl);
-        
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json'
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
-        
-        $response = curl_exec($ch);
-        
-        if (curl_errno($ch)) {
-            return "Error: " . curl_error($ch);
-        } else {
-            $data = json_decode($response, true);
-            if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-                $botResponse = $data['candidates'][0]['content']['parts'][0]['text'];
-                return $botResponse; // '1' or '0' from AI validation
-            }
-        }
-    
-        curl_close($ch);
-    }
-
     public function nextCard()
     {
         $this->currentPage++;
@@ -123,6 +117,30 @@ class LatihanKalam extends Component
         }
     }
 
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+        $this->currentPage = 1; // Reset pagination when switching tabs
+    }
+
+    public function saveAudio($soalId, $type)
+    {
+        $audioData = $type === 'cerita' 
+            ? $this->audioRecordingsCerita[$soalId] ?? null
+            : $this->audioRecordingsPercakapan[$soalId] ?? null;
+
+        if (!$audioData) {
+            return;
+        }
+
+        // Dispatch event ke JavaScript untuk menyimpan audio
+        $this->dispatch('save-audio-js', [
+            'soalId' => $soalId,
+            'tipe' => $type,
+            'userId' => auth()->id() // pastikan user sudah login
+        ]);
+    }
+
     public function render()
     {
         $soal_cerita = SoalCerita::where('id_latihan_kalam', $this->latihanKalam->id)
@@ -132,19 +150,34 @@ class LatihanKalam extends Component
                     "id" => $data->id,
                     "id_latihan_kalam" => $data->id_latihan_kalam,
                     "gambar" => $data->gambar,
-                    "deskripsi" => $data->deskripsi,
+                    "cerita" => $data->cerita,
                     "pertanyaan" => PertanyaanSoalCerita::where("id_soal_cerita", $data->id)->get()
                 ];
             });
 
-        // Paginasi manual
-        $total = $soal_cerita->count();
+        $soal_percakapan = SoalPercakapan::where("id_latihan_kalam", $this->latihanKalam->id)
+            ->get()
+            ->map(function($data) {
+                return [
+                    "id" => $data->id,
+                    "id_latihan_kalam" => $data->id_latihan_kalam,
+                    "nomor" => $data->nomor,
+                    "percakapan" => $data->percakapan,
+                    "gambar" => $data->gambar
+                ];
+            });
+
+        // Adjust pagination based on active tab
+        $total = $this->activeTab === 'cerita' ? $soal_cerita->count() : $soal_percakapan->count();
         $soal_cerita_paginated = $soal_cerita->slice(($this->currentPage - 1), 1);
+        $soal_percakapan_paginated = $soal_percakapan->slice(($this->currentPage - 1), 1);
 
         return view('livewire.latihan-kalam', [
             'soal_cerita' => $soal_cerita_paginated,
+            'soal_percakapan' => $soal_percakapan_paginated,
             'currentPage' => $this->currentPage,
-            'totalPages' => $total
+            'totalPages' => $total,
+            "jawaban_cerita" => $this->jawaban_cerita
         ]);
     }
 }

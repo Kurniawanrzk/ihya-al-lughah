@@ -11,7 +11,7 @@
         <!-- Tombol Voice dengan desain yang lebih modern -->
         <button 
             class="absolute top-6 right-6 p-3 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors duration-200"
-            onclick="responsiveVoice.speak({{ Js::from($cleanText) }}, 'Indonesian Female')"
+             wire:click="playAudio('{{ Storage::url('isi_qiraah/' . $isi_qiraah->suara) }}')"
             title="Putar Audio"
         >
             <i class="fa fa-volume-up text-blue-600" aria-hidden="true"></i>
@@ -20,7 +20,9 @@
         <div class="max-w-3xl mx-auto">
             <!-- Teks Bacaan dengan styling yang lebih baik -->
             <div class="prose prose-lg prose-blue max-w-none mb-8 text-gray-800">
-                {!! $isi_qiraah->teks_bacaan !!}
+                <div  dir="rtl" style="font-family: 'Traditional Arabic', 'Amiri', serif; font-size: 1.5rem; line-height: 2.5rem;">
+                    {!! $isi_qiraah->teks_bacaan !!}
+                </div>
             </div>
 
             <!-- Tombol Selesai dengan style yang konsisten -->
@@ -34,3 +36,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('playAudio', (data) => {
+            const audio = new Audio(data.audioUrl);
+            audio.play();
+        });
+    });
+</script>
+

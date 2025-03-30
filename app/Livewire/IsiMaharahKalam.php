@@ -10,6 +10,10 @@ class IsiMaharahKalam extends Component
     public $isi_kalam;
     public $showVideo = false; // Menyimpan status tampilan video
 
+    public function playAudio($audioUrl)
+    {
+        $this->dispatch('playAudio', audioUrl: $audioUrl);
+    }
     // Method untuk menangani tombol Next
     public function showNext()
     {

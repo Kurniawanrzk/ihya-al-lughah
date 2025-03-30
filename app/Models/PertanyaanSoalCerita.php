@@ -13,7 +13,6 @@ class PertanyaanSoalCerita extends Model
     protected $fillable = [
         "id_soal_cerita",
         "pertanyaan",
-        "jawaban_benar"
     ];
 
     

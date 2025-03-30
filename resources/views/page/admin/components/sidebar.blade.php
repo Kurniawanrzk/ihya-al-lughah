@@ -64,13 +64,25 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwoLatsol"
                 aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fa fa-book" aria-hidden="true"></i>
-                <span>Latihan Soal</span>
+                <span>Latihan Qiraah</span>
             </a>
             <div id="collapseTwoLatsol" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Operasi:</h6>
                     <a class="collapse-item" href="{{ Route("latihan_qiraah_list_index") }}">List Latihan Qiraah</a>
                     <a class="collapse-item" href="{{ Route("latihan_qiraah_tambah_index") }}">Tambah Latihan Qiraah Baru</a>
+                </div>
+            </div>
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwoLatsols"
+                aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fa fa-book" aria-hidden="true"></i>
+                <span>Latihan Kalam</span>
+            </a>
+            <div id="collapseTwoLatsols" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Operasi:</h6>
+                    <a class="collapse-item" href="{{ Route("latihan_kalam_list_index") }}">List Latihan Kalam</a>
+                    <a class="collapse-item" href="{{ Route("latihan_kalam_tambah_index") }}">Tambah Latihan Kalam Baru</a>
                 </div>
             </div>
             </li>

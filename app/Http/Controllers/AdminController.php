@@ -8,7 +8,7 @@ use League\Csv\Reader;
 use League\Csv\Statement;
 
 
-use App\Models\{LatihanQiraah, Mufrodat, SoalBenarSalah, KontenMufrodat, IsiKontenMufrodat, Qiraah, Kalam, KalamIsi, IsiQiraah, SoalLatihan, JawabanSoalLatihan};
+use App\Models\{LatihanQiraah, Mufrodat, SoalBenarSalah, KontenMufrodat, SoalPercakapan,IsiKontenMufrodat, Qiraah, Kalam, KalamIsi, IsiQiraah, SoalLatihan, JawabanSoalLatihan, LatihanKalam, SoalCerita};
 
 class AdminController extends Controller
 {
@@ -137,42 +137,40 @@ class AdminController extends Controller
     }
     public function tambahIsiMufrodat(Request $req, $id_mufrodat)
     {
-        if ($req->hasFile("file_gambar")) {
-            $req->validate([
-                'kosakata' => "required | array",
-                'kosakata*' => "required | string",
-                'file_gambar' =>  "required | array",
-                'file_gambar*' => 'required|image|mimes:jpg,png|max:2048',
-            ]);
-            $uploadedFiles = $req->file('file_gambar'); // Ambil array file
-            $arrayData = [];
-
-            foreach ($uploadedFiles as $index => $data) {
-                $filename = time() . '_' . $data->getClientOriginalName();
-
-                $path = $data->storeAs('public/isi_mufrodat', $filename);
-
-                $url = Storage::url($path);
-
-                $arrayData[] = [
-                    'id_mufrodat' => $id_mufrodat,
-                    'gambar' => $filename,
-                    "kosakata" => $req->kosakata[$index],
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
+        // $req->validate([
+        //     'kosakata' => "required | array",
+        //     'kosakata.*' => "required | string",
+        //     'file_gambar' => "sometimes | array",
+        //     'file_gambar.*' => 'sometimes|image|mimes:jpg,png|max:2048',
+        //     'file_suara' => "sometimes | array",
+        //     'file_suara.*' => 'sometimes|mimes:mp3,wav|max:5120',
+        // ]);
+    
+        foreach ($req->kosakata as $index => $kosakata) {
+            $dataToUpdate = ['kosakata' => $kosakata, 'updated_at' => now()];
+    
+            if ($req->hasFile("file_gambar.$index")) {
+                $filenameGambar = time() . '_' . $req->file("file_gambar.$index")->getClientOriginalName();
+                $pathGambar = $req->file("file_gambar.$index")->storeAs('public/isi_mufrodat', $filenameGambar);
+                $dataToUpdate['gambar'] = $filenameGambar;
             }
-
-            $insert_konten =  IsiKontenMufrodat::insert($arrayData);
-            if ($insert_konten) {
-                alert()->html("Sukses", "Mufrodat Berhasil Di Tambahkan", "success");
-                return redirect()->back();
-            } else {
-                alert()->html("Gagal", "Mufrodat gagal Di Tambahkan", "danger");
-                return redirect()->back();
+    
+            if ($req->hasFile("file_suara.$index")) {
+                $filenameSuara = time() . '_' . $req->file("file_suara.$index")->getClientOriginalName();
+                $pathSuara = $req->file("file_suara.$index")->storeAs('public/isi_mufrodat', $filenameSuara);
+                $dataToUpdate['suara'] = $filenameSuara;
             }
+    
+            IsiKontenMufrodat::updateOrInsert(
+                ['id_mufrodat' => $id_mufrodat, 'kosakata' => $kosakata],
+                $dataToUpdate
+            );
         }
+    
+        alert()->html("Sukses", "Mufrodat Berhasil Ditambahkan atau Diperbarui", "success");
+        return redirect()->back();
     }
+    
 
     public function hapusIsiMufrodat(Request $req)
     {
@@ -582,16 +580,16 @@ class AdminController extends Controller
         try {
             // Proses Soal Latihan
             if ($request->hasFile('soal_latihan')) {
-                $this->processCsvSoalLatihan($id, $request->file('soal_latihan'));
+               $this->processCsvSoalLatihan($id, $request->file('soal_latihan'));
             }
 
             // Proses Benar/Salah
             if ($request->hasFile('benar_salah')) {
-                $this->processCsvBenarSalah($id, $request->file('benar_salah'));
+              $this->processCsvBenarSalah($id, $request->file('benar_salah'));
             }
 
             alert()->html('Sukses', "Latihan Soal Qiraah Berhasil Ditambah", 'success');
-            return redirect()->back();
+           return redirect()->back();
         } catch (\League\Csv\Exception $csvException) {
             alert()->html('Gagal', "Format File Salah: {$csvException->getMessage()}", 'danger');
             return redirect()->back();
@@ -607,7 +605,7 @@ class AdminController extends Controller
     private function processCsvSoalLatihan($id, $file)
     {
         $csv = Reader::createFromPath($file->getPathname());
-        $csv->setDelimiter(';');
+        $csv->setDelimiter(',');
         $csv->setHeaderOffset(0);
 
         $records = iterator_to_array($csv->getRecords(), false);
@@ -631,10 +629,9 @@ class AdminController extends Controller
         }
 
         // Masukkan data soal_latihan
-        SoalLatihan::insert($soalData);
-
+        $data = SoalLatihan::insert($soalData);
         // Ambil ID soal_latihan
-        $soalIds = SoalLatihan::latest()->take(count($soalData))->pluck('id')->toArray();
+        $soalIds = SoalLatihan::where("id_latihan", $id)->pluck('id')->toArray(); // Mengambil semua ID soal_latihan berdasarkan id_latihan
 
         // Siapkan data jawaban
         foreach ($soalIds as $index => $soalId) {
@@ -648,6 +645,8 @@ class AdminController extends Controller
 
         // Masukkan data jawaban
         JawabanSoalLatihan::insert($jawabanData);
+
+        return $jawabanData;
     }
 
     /**
@@ -656,7 +655,7 @@ class AdminController extends Controller
     private function processCsvBenarSalah($id, $file)
     {
         $csv = Reader::createFromPath($file->getPathname());
-        $csv->setDelimiter(';');
+        $csv->setDelimiter(',');
         $csv->setHeaderOffset(0);
 
         $records = iterator_to_array($csv->getRecords(), false);
@@ -773,9 +772,78 @@ class AdminController extends Controller
         return redirect()->route('latihan_qiraah_list_index');
     }
 
+    // Soal Cerita
+public function tambahSoalCerita($id, Request $request)
+{
+    $validated = $request->validate([
+        'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'cerita.*' => 'required|string',
+    ]);
+
+    $latihan = LatihanKalam::findOrFail($id);
+
+    foreach ($request->file('gambar') as $index => $gambar) {
+        $path = $gambar->store('public/soal_cerita');
+        $url = Storage::url($path);
+
+        $latihan->soalCerita()->create([
+            'gambar' => $url,
+            'cerita' => $request->cerita[$index]
+        ]);
+    }
+
+    return back()->with('success', 'Soal cerita berhasil ditambahkan!');
+}
+
+// Soal Percakapan
+public function tambahSoalPercakapan($id, Request $request)
+{
+    $validated = $request->validate([
+        'nomor.*' => 'required|numeric',
+        'percakapan.*' => 'required|string',
+        'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $latihan = LatihanKalam::findOrFail($id);
+
+    foreach ($request->nomor as $index => $nomor) {
+        $path = $request->gambar[$index]->store('public/soal_percakapan');
+        $url = Storage::url($path);
+
+        $latihan->soalPercakapan()->create([
+            'nomor' => $nomor,
+            'percakapan' => $request->percakapan[$index],
+            'gambar' => $url
+        ]);
+    }
+
+    return back()->with('success', 'Soal percakapan berhasil ditambahkan!');
+}
     public function tambahLatihanQiraahIndex()
     {
         return view("page.admin.latihan_qiraah.tambah_latihan");
+    }
+
+    public function hapusSoalCerita($id)
+    {
+        $deleteSoalCerita = SoalCerita::destroy($id);
+
+        if($deleteSoalCerita) {
+            alert()->html("Sukses", "latihan qiraah Berhasil Di Hapus", "success");
+
+            return back()->with('success', 'Soal cerita berhasil ditambahkan!');
+        } else {
+            alert()->html("Gagal", "latihan qiraah Gagal Di Hapus", "danger");
+
+            return back()->with('success', 'Soal cerita berhasil ditambahkan!');
+        }
+
+
+    }
+
+    public function hapusSoalPercakapan($id)
+    {
+
     }
 
     public function tambahLatihanQiraahPost(Request $req)
@@ -805,6 +873,130 @@ class AdminController extends Controller
         } else {
             alert()->html('Gagal', "Silahkan Upload Gambar Thumbnail", 'danger');
             return redirect()->back();
+        }
+    }
+
+    public function latihanKalamListIndex(Request $request)
+    {
+        $jawaban_pilihan = ['A', 'B', 'C', 'D']; // For option labels in the view
+        
+        $latihan_kalam = LatihanKalam::all()->map(function ($l) {
+            return [
+                "id" => $l->id,
+                "nama_latihan" => $l->nama_latihan,
+                "urutan_bab" => $l->urutan_bab,
+                "deskripsi" => $l->deskripsi,
+                "thumbnail" => $l->thumbnail,
+                "keys" => $l->keys,
+                "soal_cerita" => SoalCerita::where("id_latihan_kalam", $l->id)
+                    ->get()->map(function ($a){
+                        return [
+                            "id" => $a->id,
+                            "id_latihan_kalam" => $a->id_latihan_kalam,
+                            "gambar" => $a->gambar,
+                            "cerita" => $a->cerita
+                        ];
+                    }),
+                "soal_percakapan" => SoalPercakapan::where("id_latihan_kalam", $l->id)
+                    ->get()->map(function ($p){
+                        return [
+                            "id" => $p->id,
+                            "nomor" => $p->nomor,
+                            "gambar" => $p->gambar,
+                            "id_latihan_kalam" => $p->id_latihan_kalam,
+                            "percakapan" => $p->percakapan,
+                            "audio" => $p->audio
+                        ];
+                    })
+            ];
+        });
+    
+        return view("page.admin.latihan_kalam.latihan_list", compact("latihan_kalam", "jawaban_pilihan"));
+    }
+
+    public function tambahLatihanKalamIndex()
+    {
+        return view("page.admin.latihan_kalam.tambah_latihan");
+    }
+
+    public function tambahLatihanKalamPost(Request $req)
+    {
+        $req->validate([
+            'thumbnail' => 'required|image|mimes:jpg,png|max:2048',
+            'urutan_bab' => 'required|string|max:100',
+            'nama_latihan' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'keys' => 'nullable|string',
+        ]);
+
+        if ($req->hasFile('thumbnail')) {
+            $filename = time() . '_' . $req->thumbnail->getClientOriginalName();
+            $path = $req->thumbnail->storeAs('public/thumbnails', $filename);
+            $url = Storage::url($path);
+
+            $latihan_kalam = new LatihanKalam;
+            $latihan_kalam->urutan_bab = $req->urutan_bab;
+            $latihan_kalam->nama_latihan = $req->nama_latihan;
+            $latihan_kalam->deskripsi = $req->deskripsi;
+            $latihan_kalam->thumbnail = $url; // Save the URL to database
+            $latihan_kalam->keys = $req->keys;
+            $latihan_kalam->save();
+
+            alert()->html("Sukses", "Latihan Kalam Berhasil Ditambahkan", "success");
+            return redirect()->route("latihan_kalam_list_index");
+        } else {
+            alert()->html('Gagal', "Silahkan Upload Gambar Thumbnail", 'danger');
+            return redirect()->back();
+        }
+    }
+
+    public function ubahLatihanKalamIndex($id)
+    {
+        $latihan_kalam = LatihanKalam::find($id);
+        return view("page.admin.latihan_kalam.ubah_latihan", compact("latihan_kalam"));
+    }
+
+    public function ubahLatihanKalamPut($id, Request $req)
+    {
+        $latihan_kalam = LatihanKalam::find($id);
+        $req->validate([
+            'thumbnail' => 'nullable|image|mimes:jpg,png|max:2048',
+            'urutan_bab' => 'required|string|max:100',
+            'nama_latihan' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'keys' => 'nullable|string',
+        ]);
+
+        $latihan_kalam->urutan_bab = $req->urutan_bab;
+        $latihan_kalam->nama_latihan = $req->nama_latihan;
+        $latihan_kalam->deskripsi = $req->deskripsi;
+        $latihan_kalam->keys = $req->keys;
+
+        if ($req->hasFile('thumbnail')) {
+            if ($latihan_kalam->thumbnail && file_exists(public_path($latihan_kalam->thumbnail))) {
+                unlink(public_path($latihan_kalam->thumbnail));
+            }
+
+            $filename = time() . '_' . $req->thumbnail->getClientOriginalName();
+            $path = $req->thumbnail->storeAs('public/thumbnails', $filename);
+            $url = Storage::url($path);
+            $latihan_kalam->thumbnail = $url;
+        }
+
+        $latihan_kalam->save();
+        alert()->html("Sukses", "Latihan Kalam Berhasil Diperbarui", "success");
+        return redirect()->route('latihan_kalam_list_index');
+    }
+
+    public function hapusLatihanKalam($id)
+    {
+        $latihan_kalam = LatihanKalam::destroy($id);
+        if ($latihan_kalam) {
+            alert()->html("Sukses", "Latihan Kalam Berhasil Dihapus", "success");
+            return redirect()->route("latihan_kalam_list_index");
+        } else {
+            alert()->html("Gagal", "Latihan Kalam Gagal Dihapus", "danger");
+            return redirect()->route("latihan_kalam_list_index");
         }
     }
 }

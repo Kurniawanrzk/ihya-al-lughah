@@ -13,10 +13,12 @@ class SoalCerita extends Model
     protected $fillable = [
         "id_latihan_kalam",
         "gambar",
-        "deskripsi"
+        "cerita"
     ];
 
-    public function pertanyaan() {
-        return $this->hasMany(PertanyaanSoalCerita::class);
+    public function pertanyaan()
+    {
+        // Update the foreign key to match your database column name
+        return $this->hasMany(PertanyaanSoalCerita::class, 'id_soal_cerita', 'id');
     }
 }

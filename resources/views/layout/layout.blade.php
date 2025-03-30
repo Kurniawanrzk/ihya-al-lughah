@@ -44,17 +44,12 @@
                     <a href="{{ Route("list_mufrodat_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Mufrodat</a>
 
                     <a href="{{ Route("list_latihan_qiraah_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Latihan Qiraah</a>
-                    <a href="#" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Game</a>
+                    <a href="{{ Route("list_latihan_kalam_index") }}" class="nav-link px-3 py-2 text-gray-600 hover:text-blue-600 rounded-lg">Latihan Kalam</a>
                 </nav>
 
                 <!-- Right Section -->
                 <div class="flex items-center space-x-4">
-                    <!-- Search -->
-                    <div class="hidden md:block">
-                        <input type="search" 
-                               class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
-                               placeholder="Search...">
-                    </div>
+               
 
                     <!-- Profile Dropdown -->
                     <div class="relative">
@@ -65,7 +60,7 @@
                                      class="w-10 h-10 rounded-full border-2 border-gray-200 hover:border-blue-400 transition-colors">
                             </button>
                             <ul class="dropdown-menu shadow-lg rounded-lg mt-2" aria-labelledby="dropdownUser1">
-                                <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="#">Profile</a></li>
+                                <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="{{ route('profil') }}">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 @if(auth()->user() == null)
                                     <li><a class="dropdown-item px-4 py-2 hover:bg-blue-50" href="{{ route('oauth.google') }}">Login Dengan Google</a></li>

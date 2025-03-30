@@ -11,16 +11,16 @@
 
             <!-- Tombol Voice -->
             <button 
-                class="absolute top-6 right-6 p-3 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors duration-200"
-                onclick="responsiveVoice.speak({{ Js::from($cleanText) }}, 'Indonesian Female')"
-                title="Putar Audio"
-            >
+            class="absolute top-6 right-6 p-3 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors duration-200"
+             wire:click="playAudio('{{ Storage::url('isi_kalam/' . $isi_kalam->suara_percakapan) }}')"
+            title="Putar Audio"
+        >
                 <i class="fa fa-volume-up text-blue-600" aria-hidden="true"></i>
             </button>
 
             <div class="max-w-3xl mx-auto">
                 <!-- Teks Percakapan -->
-                <div class="prose prose-lg prose-blue max-w-none mb-8 text-gray-800">
+                <div class="prose prose-lg prose-blue max-w-none mb-8 text-gray-800 arabic-text" style="direction: rtl; font-family: 'Traditional Arabic', serif; font-size: 2rem;">
                     {!! $isi_kalam->teks_percakapan !!}
                 </div>
 
@@ -79,3 +79,12 @@
         @endif
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('playAudio', (data) => {
+            const audio = new Audio(data.audioUrl);
+            audio.play();
+        });
+    });
+</script>

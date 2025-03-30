@@ -165,48 +165,56 @@
                                                             @method("DELETE")
                                                         </form>
                                                             <form action="{{Route("isimufrodat_tambah_post", $mufrodat['id'])}}" method="POST" enctype="multipart/form-data">
-                                                        <table>
-                                                            <thead>
-                                                                <tr>
-                                                                    <td>Gambar</td>
-                                                                    <td>Kosakata</td>
-                                                                    <td>Aksi</td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="dynamic-rows-{{ $mufrodat['id'] }}">
-                                                                @csrf
-                                                                @method("POST")
-                                                                @foreach($mufrodat['isi_mufrodat'] as $im)
-                                                                    <tr>
-                                                                        <td>
-                                                                            <img src="{{Storage::url('isi_mufrodat/' . $im['gambar']) }}" width="40" height="40" alt="Gambar">
-                                                                        </td>
-                                                                        <td>{{ $im['kosakata'] }}</td>
-                                                                        <td>
-                                                                            <button type="button" class="btn btn-danger" onclick="submitDeleteForm({{ $im['id'] }})">Hapus</button>
-                                                                        </td>
-                                                                                                                                                </form></tr>
-                                                                @endforeach
-
-
-                                                                <tr id="input-template-{{$mufrodat['id']}}" >
-                                                                    <td>
-                                                                        <input required multiple name="file_gambar[]" class="form-control" type="file" placeholder="masukkan gambar">
-                                                                    </td>
-                                                                    <td>
-                                                                        <input required multiple name="kosakata[]" class="form-control" type="text" placeholder="masukkan kosakata">
-                                                                    </td>
-                                                                    <td><button onclick="deleteRow(this)" class="btn btn-danger btn-delete-row">X</button></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td colspan="3">
-                                                                        <button type="button" onclick="addRowDynamic('input-template-{{$mufrodat['id']}}','dynamic-rows-{{ $mufrodat['id'] }}', this)" class="btn btn-info">+</button>
-                                                                        <button type="submit" class="btn btn-success">Tambah Kosakata</button>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                            
-                                                        </table>
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <td>Gambar</td>
+                                                                            <td>Kosakata</td>
+                                                                            <td>Suara</td>
+                                                                            <td>Aksi</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="dynamic-rows-{{ $mufrodat['id'] }}">
+                                                                        @csrf
+                                                                        @method("POST")
+                                                                        @foreach($mufrodat['isi_mufrodat'] as $im)
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <img src="{{Storage::url('isi_mufrodat/' . $im['gambar']) }}" width="40" height="40" alt="Gambar">
+                                                                                </td>
+                                                                                <td>{{ $im['kosakata'] }}</td>
+                                                                                <td>
+                                                                                    <audio controls>
+                                                                                        <source src="{{Storage::url('isi_mufrodat/' . $im['suara']) }}" type="audio/mpeg">
+                                                                                        Your browser does not support the audio element.
+                                                                                    </audio>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button type="button" class="btn btn-danger" onclick="submitDeleteForm({{ $im['id'] }})">Hapus</button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                
+                                                                        <tr id="input-template-{{$mufrodat['id']}}">
+                                                                            <td>
+                                                                                <input required multiple name="file_gambar[]" class="form-control" type="file" placeholder="masukkan gambar">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input required multiple name="kosakata[]" class="form-control" type="text" placeholder="masukkan kosakata">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input required multiple name="file_suara[]" class="form-control" type="file" placeholder="masukkan suara">
+                                                                            </td>
+                                                                            <td><button onclick="deleteRow(this)" class="btn btn-danger btn-delete-row">X</button></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="4">
+                                                                                <button type="button" onclick="addRowDynamic('input-template-{{$mufrodat['id']}}','dynamic-rows-{{ $mufrodat['id'] }}', this)" class="btn btn-info">+</button>
+                                                                                <button type="submit" class="btn btn-success">Tambah Kosakata</button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </form>
                                                     </div>
 

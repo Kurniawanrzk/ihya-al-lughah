@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\LatihanQiraah;
 
 class HasilSoalLatihan extends Model
 {
@@ -18,4 +19,9 @@ class HasilSoalLatihan extends Model
         "jawaban_latihan_id",
         "benar",
     ];
+
+    public function latihan()
+    {
+        return $this->belongsTo(LatihanQiraah::class, 'latihan_id');
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,11 +20,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-      //   URL::forceRootUrl(Config::get('app.url'));
-      // if (Str::contains(Config::get('app.url'), 'https://')) {
-      //   URL::forceScheme('https');
-      // }
+        URL::forceRootUrl(Config::get('app.url'));
+        if (Str::contains(Config::get('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
     }
 }

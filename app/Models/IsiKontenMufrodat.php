@@ -11,6 +11,7 @@ class IsiKontenMufrodat extends Model
     protected $table = "tb_isi_konten_mufrodat";
     protected $fillable = [
         "id_mufrodat",
+        "suara",
         "gambar",
         "kosakata"
     ];

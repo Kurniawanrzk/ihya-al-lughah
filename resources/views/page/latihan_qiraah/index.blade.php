@@ -13,10 +13,7 @@
                     <div class="text-3xl font-bold">{{ count($latihan) }}</div>
                     <div class="text-blue-100">Total Bab</div>
                 </div>
-                <div class="bg-white/10 backdrop-blur rounded-lg p-4">
-                    <div class="text-3xl font-bold">500+</div>
-                    <div class="text-blue-100">Mufradat</div>
-                </div>
+               
             </div>
         </div>
     </div>

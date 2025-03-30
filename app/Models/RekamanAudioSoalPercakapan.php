@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IsiQiraah extends Model
+class RekamanAudioSoalPercakapan extends Model
 {
     use HasFactory;
-    protected $table = "tb_isi_qiraah";
+    protected $table = "tb_rekaman_soal_percakapan";
     protected $fillable = [
-        "id_qiraah",
-        "teks_bacaan",
-        "suara"
+        'id_soal_percakapan',
+        'lokasi_audio',
+        'id_user'
     ];
 }

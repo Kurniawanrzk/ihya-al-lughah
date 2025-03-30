@@ -20,19 +20,48 @@ class Latihan extends Component
     public $totalSelectedAnswerElim = 0;
     public $benarSoalLatihan = [];
     public $benarSoalBenarSalah = [];
-    
+    public $hasilSoalLatihan = [];
+    public $hasilSoalBenarSalah = [];
+    public $statusAlertBenarSalah = false;
+
     public function mount($jawaban_soal_latihan, $latihan, $jawaban_soal_benar_salah)
     {
         $this->jawabanSoalLatihan = $jawaban_soal_latihan;
         $this->latihan = $latihan;
         $this->jawabanSoalBenarSalah = $jawaban_soal_benar_salah;
-        
+
+        // Cek apakah hasil sudah ada di database
+        $guestId = session("guest_id") ?? null;
+        $userId = auth()->user() ? auth()->user()->id : null;
+        $latihanId = $this->latihan->id;
+
+        $this->hasilSoalLatihan = HasilSoalLatihan::where('latihan_id', $latihanId)
+            ->where(function($query) use ($guestId, $userId) {
+                $query->where('guest_id', $guestId)
+                      ->orWhere('user_id', $userId);
+            })
+            ->get()
+            ->keyBy('soal_latihan_id');
+
+        $this->hasilSoalBenarSalah = HasilBenarSalah::where('latihan_id', $latihanId)
+            ->where(function($query) use ($guestId, $userId) {
+                $query->where('guest_id', $guestId)
+                      ->orWhere('user_id', $userId);
+            })
+            ->get()
+            ->keyBy('soal_benar_salah_id');
+
+        // Jika hasil sudah ada, set isFinished menjadi true
+        if ($this->hasilSoalLatihan->isNotEmpty() || $this->hasilSoalBenarSalah->isNotEmpty()) {
+            $this->isFinished = true;
+        }
+
         // Get saved answers from session if they exist
         $savedAnswers = session('quiz_answers_' . $this->latihan->id, []);
         $savedAnswersBenarSalah = session('quiz_answers_benar_salah_' . $this->latihan->id, []);
         $savedBenarSoalLatihan = session('benar_soal_latihan_' . $this->latihan->id, []);
         $savedBenarSoalBenarSalah = session('benar_soal_benar_salah_' . $this->latihan->id, []);
-        
+
         // Initialize arrays with saved values or empty defaults
         foreach ($this->jawabanSoalLatihan as $index => $soal) {
             $this->selectedAnswers[$index] = $savedAnswers[$index] ?? '';
@@ -52,11 +81,11 @@ class Latihan extends Component
 
         // Restore total selected answers
         $this->totalSelectedAnswerElim = session('total_selected_answer_elim_' . $this->latihan->id, 0);
-        
+
         // Restore current question positions
         $this->currentQuestion = session('current_question_' . $this->latihan->id, 0);
         $this->currentQuestionBenarSalah = session('current_question_benar_salah_' . $this->latihan->id, 0);
-        
+
         // Restore quiz state
         $this->isLatihan = session('is_latihan_' . $this->latihan->id, true);
         $this->isBenarSalah = session('is_benar_salah_' . $this->latihan->id, false);
@@ -173,7 +202,17 @@ class Latihan extends Component
             HasilBenarSalah::insert($hasilSoalBenarSalah);
         }
     }
+    public function makeSureBenarSalah()
+    {
+        if(!$this->statusAlertBenarSalah) {
+            $this->dispatch('show-sweet-alert');
+            $this->statusAlertBenarSalah = true;
+        } else {
+            $this->benarSalah();
+        }
+    }
 
+    #[\Livewire\Attributes\On('benar-salah-next')]
     public function benarSalah() 
     {
         $this->isBenarSalah = true;
@@ -183,6 +222,7 @@ class Latihan extends Component
             'is_benar_salah_' . $this->latihan->id => true
         ]);
     }
+
 
     public function goToQuestion($index)
     {
@@ -246,7 +286,10 @@ class Latihan extends Component
             "currentQuestionBenarSalahData" => $this->jawabanSoalBenarSalah[$this->currentQuestionBenarSalah] ?? null,
             'currentQuestionData' => $this->jawabanSoalLatihan[$this->currentQuestion] ?? null,
             'totalQuestions' => count($this->jawabanSoalLatihan),
-            "totalQuestionsBenarSalah" => count($this->jawabanSoalBenarSalah)
+            "totalQuestionsBenarSalah" => count($this->jawabanSoalBenarSalah),
+            'hasilSoalLatihan' => $this->hasilSoalLatihan,
+            'hasilSoalBenarSalah' => $this->hasilSoalBenarSalah,
+            'isFinished' => $this->isFinished
         ]);
     }
 }

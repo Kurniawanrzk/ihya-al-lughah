@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\{AdminController,QiraahController, MufrodatController,MainController, LatihanController, AuthController, OauthController, KalamController};
+use App\Http\Controllers\AudioController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,3 +14,6 @@ use App\Http\Controllers\{AdminController,QiraahController, MufrodatController,M
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::post("/save-audio", [AudioController::class, "store"])->name("save_audio");
+    

@@ -17,8 +17,9 @@
                             <img width="500" height="500" class="m-1 border rounded" src="{{ $ik->gambar }}" alt="thumbnail qiraah materi">
                         </div>
                         <div class="d-flex justify-content-around">
-                            <span class="fs-2 fw-bold d-block m-2">{{ $ik->kosakata }}</span>
-                            <button class="btn" onclick="responsiveVoice.speak('{{ $ik->kosakata }}', 'Arabic Female')"><i class="fs-1 fa fa-volume-up text-dark" aria-hidden="true"></i>
+                            <span class="fs-2 fw-bold d-block m-2" style="text-align:left">{{ $ik->kosakata }}</span>
+                            <button class="btn" wire:click="playAudio('{{ Storage::url('isi_qiraah/' . $ik->suara) }}')">
+                                <i class="fs-1 fa fa-volume-up text-dark" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
@@ -29,7 +30,7 @@
             {{ $isi_konten->links() }}
             @if($end_isi == App\Models\KontenIsiQiraah::where("id_konten_qiraah", $isi_konten_id)->get()->last()->id)
             <center>
-                <form method="post" action="{{ Route("post_qiraah_attempt", $isi_konten_id) }}">
+                <form method="post" action="{{ Route('post_qiraah_attempt', $isi_konten_id) }}">
                     @csrf
                     @method('POST')
                     <button type="submit" class="btn btn-light text-primary">Submit</button>
@@ -41,4 +42,13 @@
     </div>
  
 </div>
+
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('playAudio', (data) => {
+            const audio = new Audio(data.audioUrl);
+            audio.play();
+        });
+    });
+</script>
 

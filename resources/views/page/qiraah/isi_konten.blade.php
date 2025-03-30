@@ -11,10 +11,3 @@
     :isi_qiraah="$qiraahisi"
 />
 @endsection
-
-@section("javascript")
-
-<script src="https://code.responsivevoice.org/responsivevoice.js?key=dTNFfN3Z"></script>
-<script src="{{asset("js/sound.js")}}"></script>
-
-@endsection

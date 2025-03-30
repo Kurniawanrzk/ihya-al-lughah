@@ -13,6 +13,12 @@ class IsiMaharahQiraah extends Component
         $this->qiraah = $qiraah;
         $this->isi_qiraah = $qiraahisi;
     }
+
+    public function playAudio($audioUrl)
+    {
+        $this->dispatch('playAudio', audioUrl: $audioUrl);
+    }
+
     public function render()
     {
         return view('livewire.isi-maharah-qiraah', 

@@ -18,4 +18,13 @@ class LatihanKalam extends Model
         "deskripsi",
         "keys"
     ];
+    public function soalCerita()
+    {
+        return $this->hasMany(SoalCerita::class, 'id_latihan_kalam');
+    }
+
+    public function soalPercakapan()
+    {
+        return $this->hasMany(SoalPercakapan::class, 'id_latihan_kalam');
+    }
 }

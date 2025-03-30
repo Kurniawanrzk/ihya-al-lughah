@@ -1,3 +1,4 @@
+# Fix HTTP2 Bug on OVH
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
@@ -18,4 +19,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    RewriteRule ^(.*)$ $1 [NS,E=no-gzip:1,E=dont-vary:1]
+
 </IfModule>

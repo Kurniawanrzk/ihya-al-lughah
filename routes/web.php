@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminController, QiraahController, MufrodatController, MainController, LatihanController, AuthController, OauthController, KalamController, LatihanKalamController};
+use App\Http\Controllers\{AdminController, QiraahController,UserProfileController, MufrodatController, MainController, LatihanController, AuthController, OauthController, KalamController, LatihanKalamController};
 use Illuminate\Support\Facades\Route;
 
 Route::get('oauth/google', [\App\Http\Controllers\OauthController::class, 'redirectToProvider'])->name('oauth.google');
@@ -54,11 +54,26 @@ Route::prefix('admin')->group(function () {
         Route::put("qiraah/latihan/ubah/{id}", [AdminController::class, "ubahLatihanQiraahPut"])->name("latihan_qiraah_ubah_put");
         Route::post("qiraah/latihan/soal/", [AdminController::class, "hapusLatihanSoalQiraah"])->name("hapus_soal_qiraah");
         Route::post("qiraah/latihan/benar_salah", [AdminController::class, 'hapusBenarSalahQiraah'])->name("hapus_benar_salah");
+
+        Route::get("kalam/latihan", [AdminController::class, "latihanKalamListIndex"])->name("latihan_kalam_list_index");
+        Route::get("kalam/latihan/baru", [AdminController::class, "tambahLatihanKalamIndex"])->name("latihan_kalam_tambah_index");
+        Route::post("kalam/latihan/baru", [AdminController::class, "tambahLatihanKalamPost"])->name("latihan_kalam_tambah_post");
+        Route::get("kalam/latihan/ubah/{id}", [AdminController::class, "ubahLatihanKalamIndex"])->name("ubah_latihan_kalam");
+        Route::put("kalam/latihan/ubah/{id}", [AdminController::class, "ubahLatihanKalamPut"])->name("latihan_kalam_ubah_put");
+        Route::delete("kalam/latihan/{id}", [AdminController::class, "hapusLatihanKalam"])->name("hapus_latihan_kalam");
+
+        Route::delete("kalam/latihan/hapus/cerita/{id}", [AdminController::class, "hapusSoalCerita"])->name("hapus_soal_cerita");
+        Route::post("kalam/latihan/tambah/cerita/{id}", [AdminController::class, "tambahSoalCerita"])->name("tambah_soal_cerita");
+
+        Route::post("kalam/latihan/tambah/percakapan/{id}", [AdminController::class, "tambahSoalPercakapan"])->name("tambah_soal_percakapan");
+
+        // Latihan Kalam Routes
+    
     });
 });
 Route::middleware(['guestMiddleware'])->group(function () {
     Route::get("/", [MainController::class, 'index'])->name("index");
-
+    Route::get('/profil', [UserProfileController::class, 'show'])->name('profil');
     Route::prefix('qiraah')->group(function () {
         Route::get("/", [QiraahController::class, "index"])->name("list_qiraah_index");
         Route::get("/{urutan_bab}", [QiraahController::class, 'isi_konten'])->name("qiraah_isi_konten");
@@ -82,5 +97,6 @@ Route::middleware(['guestMiddleware'])->group(function () {
         Route::get("kalam", [LatihanKalamController::class, "index"])->name("list_latihan_kalam_index");
         Route::get("kalam/{urutan_bab}", [LatihanKalamController::class, "isiKontenLatihan"])->name("isi_konten_latihan_kalam");
     });
+
     Route::get("/logout", [OauthController::class, 'logout'])->name("logout");
 });
