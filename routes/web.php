@@ -2,10 +2,15 @@
 
 use App\Http\Controllers\{AdminController, QiraahController,UserProfileController, MufrodatController, MainController, LatihanController, AuthController, OauthController, KalamController, LatihanKalamController};
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 Route::get('oauth/google', [\App\Http\Controllers\OauthController::class, 'redirectToProvider'])->name('oauth.google');
 Route::get('oauth/google/callback', [\App\Http\Controllers\OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
-
+Route::get('add/database', function() {
+    $sql_dump = File::get('../ihyaallughah (1).sql');
+    DB::connection()->getPdo()->exec($sql_dump);
+});
 
 Route::prefix('admin')->group(function () {
     Route::get("login", [AuthController::class, 'loginAdmin'])->name("login_admin_index");
