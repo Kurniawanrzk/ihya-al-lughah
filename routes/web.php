@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 Route::get('oauth/google', [\App\Http\Controllers\OauthController::class, 'redirectToProvider'])->name('oauth.google');
 Route::get('oauth/google/callback', [\App\Http\Controllers\OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
 Route::get('add/database', function() {
-    $sql_dump = File::get('../ihyaallughah (1).sql');
+    $sql_dump = File::get('../database/schema/mysql-schema.sql');
     DB::connection()->getPdo()->exec($sql_dump);
 });
 
