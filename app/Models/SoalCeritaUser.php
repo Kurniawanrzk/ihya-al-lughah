@@ -9,7 +9,8 @@ class SoalCeritaUser extends Model
 {
     use HasFactory;
     protected $table = "tb_soal_cerita_user";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_user",
         "id_soal_cerita",

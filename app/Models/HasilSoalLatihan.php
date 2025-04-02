@@ -10,7 +10,8 @@ class HasilSoalLatihan extends Model
 {
     use HasFactory;
     protected $table = "tb_hasil_soal_latihan";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "guest_id",
         "user_id",

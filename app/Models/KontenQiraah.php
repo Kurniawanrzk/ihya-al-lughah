@@ -9,6 +9,8 @@ class KontenQiraah extends Model
 {
     use HasFactory;
     protected $table = "tb_konten_qiraah";
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "id_qiraah",
         "nama_konten_qiraah",

@@ -9,7 +9,8 @@ class PertanyaanSoalCerita extends Model
 {
     use HasFactory;
     protected $table = "tb_pertanyaan_soal_cerita";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_soal_cerita",
         "pertanyaan",

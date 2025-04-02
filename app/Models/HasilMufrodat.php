@@ -9,6 +9,8 @@ class HasilMufrodat extends Model
 {
     use HasFactory;
     protected $table = "tb_hasil_mufrodat";
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "id_konten_mufrodat",
         "guest_id",

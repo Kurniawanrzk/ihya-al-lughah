@@ -9,7 +9,8 @@ class RekamanAudioSoalCerita extends Model
 {
     use HasFactory;
     protected $table = "tb_rekaman_soal_cerita";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_soal_cerita",	
         "lokasi_audio",

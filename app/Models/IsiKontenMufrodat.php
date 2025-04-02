@@ -9,6 +9,8 @@ class IsiKontenMufrodat extends Model
 {
     use HasFactory;
     protected $table = "tb_isi_konten_mufrodat";
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "id_mufrodat",
         "suara",

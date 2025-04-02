@@ -10,7 +10,8 @@ class LatihanKalamUser extends Model
     use HasFactory;
     
     protected $table = "tb_latihan_kalam_user";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_user",
         "id_latihan_kalam_user",

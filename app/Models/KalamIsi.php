@@ -9,6 +9,8 @@ class KalamIsi extends Model
 {
     use HasFactory;
     protected $table = "tb_isi_kalam";
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "video",
         "teks_percakapan",

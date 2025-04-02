@@ -9,6 +9,8 @@ class AttemptQiraah extends Model
 {
     use HasFactory;
     protected $table = "tb_hasil_qiraah";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_konten_qiraah",
         "guest_id",

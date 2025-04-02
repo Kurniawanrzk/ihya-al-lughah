@@ -9,7 +9,8 @@ class SoalCerita extends Model
 {
     use HasFactory;
     protected $table = "tb_soal_cerita";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "id_latihan_kalam",
         "gambar",

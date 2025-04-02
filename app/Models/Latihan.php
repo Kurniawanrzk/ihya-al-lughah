@@ -9,7 +9,8 @@ class Latihan extends Model
 {
     use HasFactory;
     protected $table = "tb_latihan_qiraah";
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
         "nama_latihan",
         "deskripsi",

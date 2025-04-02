@@ -9,6 +9,8 @@ class JawbanBenarSalah extends Model
 {
     use HasFactory;
     protected $table = 'tb_jawaban_soal_benar_salah';
+    protected $primaryKey = 'id';
+public $incrementing = true;
     protected $fillable = [
         "id_soal_benar_salah",
         "jawban", 
