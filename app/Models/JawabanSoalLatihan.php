@@ -12,6 +12,7 @@ class JawabanSoalLatihan extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_soal_latihan",
         "jawaban",
         "benar",

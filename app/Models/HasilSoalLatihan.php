@@ -13,6 +13,7 @@ class HasilSoalLatihan extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "guest_id",
         "user_id",
         "latihan_id",

@@ -12,6 +12,7 @@ class LatihanQiraah extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
+        'id',
         "nama_latihan",
         "thumbnail",
         "urutan_bab",

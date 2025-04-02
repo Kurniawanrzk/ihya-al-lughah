@@ -12,6 +12,7 @@ class KontenQiraah extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_qiraah",
         "nama_konten_qiraah",
         "thumbnail",

@@ -12,6 +12,7 @@ class Mufrodat extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "nama_materi",
         "urutan_bab",
         "deskripsi",

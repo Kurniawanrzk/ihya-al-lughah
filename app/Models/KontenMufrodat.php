@@ -12,6 +12,7 @@ class KontenMufrodat extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_mufrodat",
         "nama_konten_mufrodat",
         "thumbnail"

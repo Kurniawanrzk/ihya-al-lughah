@@ -12,6 +12,7 @@ class IsiQiraah extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_qiraah",
         "teks_bacaan",
         "suara"

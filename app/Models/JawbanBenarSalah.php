@@ -12,6 +12,7 @@ class JawbanBenarSalah extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_soal_benar_salah",
         "jawban", 
         "benar"

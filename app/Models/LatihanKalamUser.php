@@ -13,6 +13,7 @@ class LatihanKalamUser extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_user",
         "id_latihan_kalam_user",
         "status", // 'in_progress', 'completed'

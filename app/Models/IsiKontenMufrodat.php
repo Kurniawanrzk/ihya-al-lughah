@@ -12,6 +12,7 @@ class IsiKontenMufrodat extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_mufrodat",
         "suara",
         "gambar",

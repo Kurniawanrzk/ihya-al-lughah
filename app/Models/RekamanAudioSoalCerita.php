@@ -12,6 +12,7 @@ class RekamanAudioSoalCerita extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_soal_cerita",	
         "lokasi_audio",
         "id_user",

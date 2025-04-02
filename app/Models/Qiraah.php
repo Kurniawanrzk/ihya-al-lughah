@@ -12,6 +12,7 @@ class Qiraah extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "nama_qiraah",
         "thumbnail",
         "deskripsi",

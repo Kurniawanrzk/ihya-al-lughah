@@ -12,6 +12,7 @@ class RekamanAudioSoalPercakapan extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         'id_soal_percakapan',
         'lokasi_audio',
         'id_user'

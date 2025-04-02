@@ -12,6 +12,7 @@ class SoalCerita extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_latihan_kalam",
         "gambar",
         "cerita"

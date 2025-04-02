@@ -12,6 +12,7 @@ class HasilMufrodat extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "id_konten_mufrodat",
         "guest_id",
         "id_user"

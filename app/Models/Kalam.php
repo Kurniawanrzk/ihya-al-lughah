@@ -12,6 +12,7 @@ class Kalam extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "urutan_bab",
         "nama_materi",
         "deskripsi",

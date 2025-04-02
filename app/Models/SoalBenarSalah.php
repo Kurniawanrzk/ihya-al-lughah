@@ -12,6 +12,7 @@ class SoalBenarSalah extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "pertanyaan",
         "nomor"
     ];

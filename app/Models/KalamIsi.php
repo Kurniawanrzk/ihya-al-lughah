@@ -12,6 +12,7 @@ class KalamIsi extends Model
     protected $primaryKey = 'id';
 public $incrementing = true;
     protected $fillable = [
+        'id',
         "video",
         "teks_percakapan",
         "id_kalam",

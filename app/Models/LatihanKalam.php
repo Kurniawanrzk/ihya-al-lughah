@@ -13,6 +13,7 @@ class LatihanKalam extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
+        'id',
         "nama_latihan",
         "urutan_bab",
         "thumbnail",

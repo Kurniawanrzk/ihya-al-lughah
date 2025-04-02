@@ -12,6 +12,7 @@ class SoalPercakapanUser extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;    
     protected $fillable = [
+        'id',
         "id_user",
         "id_soal_percakapan",
         "jawaban",
