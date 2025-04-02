@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 Route::get('oauth/google', [\App\Http\Controllers\OauthController::class, 'redirectToProvider'])->name('oauth.google');
 Route::get('oauth/google/callback', [\App\Http\Controllers\OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
 Route::get("execute-sql", function() {
-$sql_dump = File::get('../path/to/ihyaallughah (1).sql'); // Update the path as necessary
+$sql_dump = File::get('../ihyaallughah (1).sql'); // Update the path as necessary
  DB::connection()->getPdo()->exec($sql_dump);
   return response()->json(['message' => 'SQL file executed successfully.']);
 })->name("execute_sql");
